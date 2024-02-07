@@ -285,8 +285,8 @@ def faucet():
                     params={
                         'address': acct,
                         'amount': format(amount * 1e6, '.0f')
-                    }
-                )
+                    }, 
+                timeout=60)
                 if response.status_code == 200:
                     message = 'Sent {0} <small>Libra</small> to <a href="/account/{1}">{1}</a>'.format(amount, acct)
         except:
