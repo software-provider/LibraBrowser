@@ -7,6 +7,7 @@
 ################
 import json
 from logging.config import dictConfig
+from security import safe_requests
 
 with open('logging.json', 'r') as f:
     dictConfig( json.load(f) )
@@ -17,7 +18,6 @@ with open('logging.json', 'r') as f:
 import re
 import sys
 import os
-import requests
 import struct
 
 from time import sleep
@@ -26,7 +26,7 @@ from rpc_client import get_acct_raw, get_acct_info, start_rpc_client_instance
 from db_funcs import get_latest_version, TxDBWorker
 from stats import calc_stats
 from models import Transaction, session_scope
-from sqlalchemy import desc, func
+from sqlalchemy import desc
 
 ##############
 # Flask init #
@@ -280,8 +280,7 @@ def faucet():
             elif not is_valid_account(acct):
                 message = 'Invalid account format'
             else:
-                response = requests.get(
-                    config['FAUCET_HOST'],
+                response = safe_requests.get(config['FAUCET_HOST'],
                     params={
                         'address': acct,
                         'amount': format(amount * 1e6, '.0f')
